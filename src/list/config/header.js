@@ -23,6 +23,7 @@ const header = {
                 return node.find('h1').text()
             },
             
+            // 可选配置
             data() {
                 return {
                     title

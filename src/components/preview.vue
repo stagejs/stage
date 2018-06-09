@@ -1,22 +1,29 @@
 <template lang="pug">
 .preview
+    component(:is="mod.name" :key="mod.name" :name="mod.name" :uuid="mod.uuid" v-for="mod in items")
 
 </template>
 <script>
 import uid from 'uuid'
 import Mod from '../common/mod'
 import bus from '../common/bus'
+import mods from '../common/mod-loader'
 
 export default {
 
     data() {
         return {
-            page: {
-                name: 'demo',
-                mods: []
-            }
+            // page: {
+            //     name: 'demo',
+            //     mods: []
+            // },
+            // 已加载的组件
+            items: []
         }
     },
+
+    /// 注册所有组件
+    components: mods.components,
     
     mounted() {
         this.bind()
@@ -34,11 +41,69 @@ export default {
             })
         },
 
+        /// 为组件注入其申请的能力列表
+        regAbility(vm, config) {
+            /// todo 能力列表 应从外部引入 待优化
+            const ability = {
+                sortable(node) {
+                    node.sortable()
+                },
+
+                deleteable(node) {
+                    console.log('deleteable is not ready')
+                }
+            }
+
+            const target = $(vm.$el)
+
+            /// 解析模块配置
+            config.ability && config.ability.length &&
+            config.ability.forEach(ab => {
+                if (Array.from(Object.keys(ability)).indexOf(ab) >= 0) {
+                    ability[ab](target)
+                }
+            })
+        },
+
         dropable() {
             /// 组件进入舞台时的各种操作
             $(this.$el).droppable({
                 accept: ".ui-draggable",
                 drop: (event, ui) => {
+                    /// 创建组件页面渲染副本UUID 作为操作副本的唯一id
+                    const uuid = uid.v4()
+
+                    /// 查询组件name 作为组件识别id
+                    const name = ui.draggable.attr('name')
+
+                    /// 从平台获得舞台数据
+                    const mod = mods.mods.find(mod => mod.name === name)
+
+                    /// 动态加载组件到中心舞台
+                    this.items.push({
+                        uuid: uuid,
+                        name: name,
+                    })
+
+                    
+
+
+                    /// 查找当前组件的vm实例
+                    this.$nextTick(() => {
+                        const vm = this.$children.find(vm => uuid === vm.$attrs.uuid)
+                        /// 实例信息注入到舞台数据中
+                        window.stage.vms.map[uuid] = vm
+                        window.stage.vms.list.push({
+                            vm: vm,
+                            name: name,
+                            uuid: uuid,
+                        })
+
+                        /// 为组件注入能力列表
+                        this.regAbility(vm, mod.config)
+                    })
+                },
+                drops: (event, ui) => {
                     const uuid = uid.v4()
                     /// 查询组件名
                     const name = ui.draggable.attr('name')
@@ -52,43 +117,6 @@ export default {
                     target.removeClass('ui-draggable ui-draggable-handle')
                     /// 添加副本到舞台
                     $(event.target).append(target)
-
-                    
-                    /// 从平台获得舞台数据
-                    const mod = mods.mods.find(mod => mod.name === name)
-                    const config = mod.config
-
-
-                    /// todo 能力列表 应从外部引入 待优化
-                    const ability = {
-                        sortable(node) {
-                            node.sortable()
-                        },
-
-                        deleteable(node) {
-                            console.log('deleteable', name, uuid)
-                        }
-                    }
-
-
-                    /// 解析模块配置
-                    config.ability && config.ability.length &&
-                    config.ability.forEach(ab => {
-                        if (Array.from(Object.keys(ability)).indexOf(ab) >= 0) {
-                            ability[ab](target)
-                        }
-                    })
-
-
-
-                    /// 存储舞台数据
-                    /// 更新可视化平台全局配置数据
-                    /// 存储组件副本
-                    mod.cloneMap[uuid] = target
-
-                    /// 存储舞台组件数据
-                    // d => this.page.mods
-                    this.parseMods(name, uuid)
                 }
             })
             .sortable({
@@ -97,15 +125,13 @@ export default {
                     let items = ui.item.parent().find('>')
                     // mods uuid
                     let uuids = Array.from(items).map(item => item.getAttribute('uuid'))
-                    // 排序 mods
-                    this.page.mods = uuids.map(uuid => {
-                        return this.page.mods.find(mod => mod.uuid === uuid)
-                    })
 
-                    /// todo
-                    /// 临时测试使用 后续需优化
-                    /// 更新舞台组件数据到全局数据队列
-                    window.mods.page = this.page.mods
+
+                    /// window.stage.vms.list 进行排序
+                    /// 始终保证与舞台上组件顺序相同
+                    window.stage.vms.list = uuids.map(uuid => {
+                        return window.stage.vms.list.find(mod => mod.uuid === uuid)
+                    })
                 }
             })
             .disableSelection()
@@ -113,14 +139,6 @@ export default {
 
         choose(type) {
             bus.$emit('mods.choose', type)
-        },
-
-        parseMods(name, uuid) {
-            this.page.mods.push({
-                name: name,
-                uuid: uuid
-            })
-            window.mods.page = this.page.mods
         }
     }
 }

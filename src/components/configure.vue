@@ -8,7 +8,7 @@
 <script>
 import bus from '../common/bus'
 import template from '../w/template'
-import parse from '../common/config-parser'
+import ConfigParser from '../common/config-parser'
 
 export default {
 
@@ -20,7 +20,12 @@ export default {
         bind() {
             bus.$on('stage.choose', (name, uuid) => {
                 const mod = mods.mods.find(mod => mod.name === name)
-                const doms = parse($(mod.cloneMap[uuid]), mod.config.editor)
+                const parser = new ConfigParser({
+                    vm: mod.vm,
+                    clone: $(mod.cloneMap[uuid]),
+                    config: mod.config.editor
+                })
+                const doms = parser.parse()
                 $(this.$el).find('.editor').html(doms || '')
             })
         },

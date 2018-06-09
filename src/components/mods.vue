@@ -3,9 +3,7 @@
     nav.tab
         li(v-for="item in tabs" @click="tab(item.name)" :class="{active: item.active}") {{ item.name }}
     .list(ref="list" v-if="tabs[0].active")
-        lincoapp-header(name="lincoapp-header")
-        lincoapp-form(name="lincoapp-form")
-        lincoapp-footer(name="lincoapp-footer")
+        component(:is="mod.name" :name="mod.name" :key="mod.name" v-for="mod in mods")
     .resources(ref="res" v-if="tabs[1].active")
         img(src="../assets/bg.png")
         img(src="../assets/bg2.png")
@@ -17,6 +15,7 @@ export default {
 
     data() {
         return {
+            mods: mods.mods.slice(0),
             tabs: [
                 {
                     name: '组件',
@@ -35,15 +34,16 @@ export default {
     mounted() {
         this.dragableMods()
     },
-
+    
     methods: {
+
         tab(name) {
             this.tabs = this.tabs.map(tab => {
                 tab.active = tab.name === name
                 return tab
             })
             this.$nextTick(() => {
-                this.dragableRes()
+                // this.dragableRes()
                 this.dragableMods()
             })
         },
@@ -70,10 +70,11 @@ export default {
                     helper: "clone"
                 })
 
+                /// MARK: - vm挂载路径更改 改为在preview中进行挂载
                 /// 更新可视化平台全局配置数据
-                const name = vm.$el.getAttribute('name')
-                const mod = mods.mods.find(mod => mod.name === name)
-                mod.vm = vm
+                // const name = vm.$el.getAttribute('name')
+                // const mod = mods.mods.find(mod => mod.name === name)
+                // mod.vm = vm
             })
         }
     }

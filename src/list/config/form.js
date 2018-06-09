@@ -12,11 +12,26 @@ const form = {
             title: '新增字段',
     
             /// 描述
-            desc: '这里可以修改title',
+            desc: '点击新增字段',
 
             submit(node) {
-                const item = $('<div class="form-item"><input type="text"></div>')
+                const item = $('<div class="form-item"><label>新增字段</label><input type="text"></div>')
                 node.find('.form-control').before(item)
+            }
+        },
+        {
+            /// 配置类型
+            type: types.button,
+
+            title: '测试',
+    
+            /// 描述
+            desc: '测试',
+
+            submit(node) {
+                // const item = $('<div class="form-item"><label>新增字段</label><input type="text"></div>')
+                // node.find('.form-control').before(item)
+                console.log('test')
             }
         }
     ]

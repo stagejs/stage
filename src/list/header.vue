@@ -1,9 +1,18 @@
 <template lang="pug">
 .lincoapp-header
-    h1 注册
+    h1 {{ title }}
 </template>
+<script>
+export default {
+    data() {
+        return {
+            title: "注册"
+        }
+    }
+}
+</script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .lincoapp-header
     width 100%
     height 44px

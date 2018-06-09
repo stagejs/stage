@@ -1,45 +1,68 @@
+import is from 'aimee-is'
 import types from './types'
+import Creater from '../common/creater'
 
-function parse(node, config) {
-    if (!config || config.length === 0) {
-        return
+const create = new Creater()
+
+
+export default class ConfigParser {
+    constructor({vm, clone, config}) {
+        this.vm = vm
+        this.clone = clone
+        this.config = config
     }
-    return config.filter(conf => types[conf.type]).map(conf => {
-        return creater[conf.type](node, conf)
-    })
-}
 
-
-const creater = {
-    text(node, config) {
-        const last = editor[config.type](config)
-
-        last.target.val(config.get(node))
-        last.target.on('keypress', e => {
-            if (e.keyCode === 13) {
-                config.set(node, last.target.val())
-            }
+    parse() {
+        if (!this.config || this.config.length === 0) {
+            return
+        }
+        return this.config.filter(conf => types[conf.type]).map(conf => {
+            return createEditor(this.clone, conf)
         })
-
-        return last.wrapper
-    },
-
-    button(node, config) {
-
     }
 }
 
+function createEditor(node, config) {
+    if (editor[config.type]) {
+        return editor[config.type](node, config).wrapper
+    }
+}
 
 const editor = {
-    text(config) {
-        const wrapper = $('<div class="config-item"></div>')
-        const title = $(`<label>${config.title}</label>`)
-        const desc = $(`<div class="desc">${config.desc}</div>`)
-        const target = $('<input type="text">')
+    text(node, config) {
+        const wrapper = create.wrapper()
+        const title = create.emmet(`label{${config.title}}`)
+        const desc = create.desc(config.desc)
+        const target = create.emmet('input[type="text"]')
 
         wrapper.append(title)
         wrapper.append(target)
         wrapper.append(desc)
+
+        target.val(config.get(node))
+        target.on('keypress', e => {
+            if (e.keyCode === 13) {
+                config.set(node, target.val())
+            }
+        })
+
+        return {
+            target,
+            wrapper
+        }
+    },
+
+    button(node, config) {
+        const wrapper = create.wrapper()
+        const desc = create.desc(config.desc)
+        const target = create.emmet('button.btn').text(config.title)
+
+        wrapper.append(target)
+        wrapper.append(desc)
+
+        target.on('click', e => {
+            config.submit(node)
+        })
 
         return {
             target,
@@ -47,5 +70,3 @@ const editor = {
         }
     }
 }
-
-export default parse

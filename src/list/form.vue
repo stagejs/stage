@@ -27,7 +27,7 @@ export default {
     }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 .lincoapp-form
     width 100%
     background #eee

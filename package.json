@@ -10,6 +10,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@gavinning/emmet.js": "^1.0.1",
+    "aimee-is": "^1.1.0",
     "babel-polyfill": "^6.26.0",
     "minireset.css": "^0.0.3",
     "uuid": "^3.2.1",

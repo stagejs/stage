@@ -40,5 +40,16 @@ const ms = window.mods = {
     components
 }
 
+/// todo 此地全局变量需优化
+/// 存储舞台所有实例 只允许中央舞台写入 其他模块只有读取权限
+window.stage = {
+
+    /// 存储中心舞台所有vm实例
+    vms: {
+        map: {}, // {uuid: vm}
+        list: [] // { vm, uuid, name }
+    }
+}
+
 export default ms
 
