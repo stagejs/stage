@@ -28,6 +28,32 @@ export default {
                 const doms = parser.parse()
                 $(this.$el).find('.editor').html(doms || '')
             })
+
+            bus.$on('stage.choose', (name, uuid) => {
+                // const mod = mods.mods.find(mod => mod.name === name)
+                // const parser = new ConfigParser({
+                //     vm: mod.vm,
+                //     clone: $(mod.cloneMap[uuid]),
+                //     config: mod.config.editor
+                // })
+                // const doms = parser.parse()
+
+                const vm = window.vm = window.stage.vms.list[0].vm
+                const input = $('<input type="text">')
+
+                $(this.$el).find('.editor').append(input)
+
+                input.val(vm.title)
+
+                /// 监听数据的变化
+                vm.$watch('title', function(value) {
+                    input.val(value)
+                })
+
+                input.on('input', e => {
+                    vm.title = input.val()
+                })
+            })
         },
 
         build() {

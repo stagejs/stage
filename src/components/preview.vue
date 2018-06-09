@@ -1,6 +1,13 @@
 <template lang="pug">
 .preview
-    component(:is="mod.name" :key="mod.name" :name="mod.name" :uuid="mod.uuid" v-for="mod in items")
+    component(
+        :is="mod.name"
+        :key="mod.name"
+        :name="mod.name"
+        :uuid="mod.uuid"
+        :class="mod.className"
+        v-for="mod in items"
+    )
 
 </template>
 <script>
@@ -13,11 +20,6 @@ export default {
 
     data() {
         return {
-            // page: {
-            //     name: 'demo',
-            //     mods: []
-            // },
-            // 已加载的组件
             items: []
         }
     },
@@ -83,6 +85,8 @@ export default {
                     this.items.push({
                         uuid: uuid,
                         name: name,
+                        /// 注入操作需要的类
+                        className: 'lincoapp'
                     })
 
                     
