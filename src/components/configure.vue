@@ -1,7 +1,7 @@
 <template lang="pug">
 .configures
-    a.btn(@click="build") 创建
-
+    .ctrl
+        a.btn(@click="build") 创建
     .editor
 
 </template>
@@ -18,41 +18,16 @@ export default {
     
     methods: {
         bind() {
-            bus.$on('stage.choose', (name, uuid) => {
+            /// 监听渲染事件请求
+            bus.$on('configure.render', ({name, uuid}) => {
+                const vm = window.vm = window.stage.vms.map[uuid]
                 const mod = mods.mods.find(mod => mod.name === name)
                 const parser = new ConfigParser({
-                    vm: mod.vm,
-                    clone: $(mod.cloneMap[uuid]),
+                    vm,
                     config: mod.config.editor
                 })
                 const doms = parser.parse()
                 $(this.$el).find('.editor').html(doms || '')
-            })
-
-            bus.$on('stage.choose', (name, uuid) => {
-                // const mod = mods.mods.find(mod => mod.name === name)
-                // const parser = new ConfigParser({
-                //     vm: mod.vm,
-                //     clone: $(mod.cloneMap[uuid]),
-                //     config: mod.config.editor
-                // })
-                // const doms = parser.parse()
-
-                const vm = window.vm = window.stage.vms.list[0].vm
-                const input = $('<input type="text">')
-
-                $(this.$el).find('.editor').append(input)
-
-                input.val(vm.title)
-
-                /// 监听数据的变化
-                vm.$watch('title', function(value) {
-                    input.val(value)
-                })
-
-                input.on('input', e => {
-                    vm.title = input.val()
-                })
             })
         },
 
@@ -72,7 +47,7 @@ export default {
     }
 }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 .configures
     width 100%
     height 100%
@@ -80,20 +55,50 @@ export default {
     label
         display block
 
+    .ctrl
+        border-bottom 1px solid #bbb
+
     .editor
         width 100%
 
-.btn
-    display block
-    margin 20px
-    background #fff
-    padding 8px 0
-    text-align center
-    font-size 14px
-    appearance none
-    border none 
-    outline none
-    border-radius 4px
-    cursor default
+    .btn
+        display block
+        margin 20px
+        background #fff
+        padding 8px 0
+        text-align center
+        font-size 14px
+        appearance none
+        border none 
+        outline none
+        border-radius 4px
+        cursor default
+
+    .config-item
+        padding 12px 12px
+        border-bottom 1px solid #bbb
+        border-top 1px solid #fff
+
+        &:last-child
+            border-bottom none
+
+    .config-title
+        font-size 16px
+
+    .config-desc
+        font-size 12px
+        color #666
     
+    .config-group
+        margin-top 16px
+
+    .config-cell
+        margin-bottom 6px
+
+    .cell-title
+        font-size 14px
+
+    .cell-desc
+        font-size 12px
+        color #999
 </style>

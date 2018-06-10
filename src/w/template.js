@@ -53,16 +53,15 @@ function parse() {
 
     myMods.components = {}
     // => namse
-    myMods.names = mods.page.map(mod => mod.name)
+    myMods.names = mods.mods.map(mod => mod.name)
     // => mods
     myMods.mods = mods.mods.filter(item => {
-        return mods.page.map(mod => mod.name).indexOf(item.name) >= 0
+        return mods.mods.map(mod => mod.name).indexOf(item.name) >= 0
     })
     // => components
     myMods.names.forEach(name => {
         myMods.components[name] = myMods.mods.find(mod => mod.name === name).vm
     })
-
 
     /// parse html
     const html = {

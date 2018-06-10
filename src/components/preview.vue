@@ -2,7 +2,7 @@
 .preview
     component(
         :is="mod.name"
-        :key="mod.name"
+        :key="mod.uuid"
         :name="mod.name"
         :uuid="mod.uuid"
         :class="mod.className"
@@ -34,13 +34,25 @@ export default {
 
     methods: {
         bind() {
+            const vm = this
+
             bus.$on('config.build', () => {
                 // console.log(this.page.mods)
             })
 
+
             $(this.$el).delegate('.lincoapp', 'click', function(){
-                bus.$emit('stage.choose', this.getAttribute('name'), this.getAttribute('uuid'))
+                vm.renderModConfig({
+                    name: this.getAttribute('name'),
+                    uuid: this.getAttribute('uuid')
+                })
             })
+        },
+
+
+        renderModConfig({name, uuid}) {
+            // 请求配置中心渲染当前组件配置
+            bus.$emit('configure.render', {name, uuid})
         },
 
         /// 为组件注入其申请的能力列表
@@ -89,9 +101,6 @@ export default {
                         className: 'lincoapp'
                     })
 
-                    
-
-
                     /// 查找当前组件的vm实例
                     this.$nextTick(() => {
                         const vm = this.$children.find(vm => uuid === vm.$attrs.uuid)
@@ -105,6 +114,9 @@ export default {
 
                         /// 为组件注入能力列表
                         this.regAbility(vm, mod.config)
+
+                        /// 渲染组件配置
+                        this.renderModConfig({name, uuid})
                     })
                 },
                 drops: (event, ui) => {

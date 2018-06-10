@@ -1,12 +1,15 @@
 <template lang="pug">
 .lincoapp-header
-    h1 {{ title }}
+    h1 {{ test.text }}
 </template>
 <script>
 export default {
     data() {
         return {
-            title: "注册"
+            title: "注册",
+            test: {
+                text: "test"
+            }
         }
     }
 }

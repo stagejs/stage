@@ -1,11 +1,9 @@
 <template lang="pug">
 .lincoapp-form
-    .form-item
-        label 用户名
-        input(type="text" v-model="username" placeholder="请输入用户名")
-    .form-item
-        label 密码
-        input(type="password" v-model="password" placeholder="请输入密码")
+    .form-item(v-for="item in items")
+        label {{ item.title }}
+        input(:type="item.type" v-model="item.value" :placeholder="item.placeholder")
+
     .form-control
         button(@click="submit") 提交
 </template>
@@ -14,15 +12,46 @@ export default {
     
     data() {
         return {
-            username: '',
-            password: ''
+
+            items: [
+                {
+                    type: 'text',
+                    title: '用户名',
+                    key: 'username',
+                    value: '',
+                    placeholder: '请输入用户名'
+                },
+                {
+                    type: 'password',
+                    title: '密码',
+                    key: 'password',
+                    value: '',
+                    placeholder: '请输入密码'
+                }
+            ]
+        }
+    },
+
+    computed: {
+        form() {
+            let arr = this.items.map(item => {
+                return [item.key, item.value]
+            })
+            return this.arrayToMap(arr)
         }
     },
 
     methods: {
         submit() {
-            console.log(this.username)
-            console.log(this.password)
+            console.log(this.form)
+        },
+
+        arrayToMap(arr) {
+            let target = {}
+            arr.forEach(item => {
+                target[item[0]] = item[1]
+            })
+            return target
         }
     }
 }
