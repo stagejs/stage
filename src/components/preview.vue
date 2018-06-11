@@ -12,9 +12,10 @@
 </template>
 <script>
 import uid from 'uuid'
-import Mod from '../common/mod'
 import bus from '../common/bus'
-import mods from '../common/mod-loader'
+import Mod from '../class/mod'
+import mods from '../loader/mods-loader'
+import stage from '../loader/stage-loader'
 
 export default {
 
@@ -24,8 +25,8 @@ export default {
         }
     },
 
-    /// 注册所有组件
-    components: mods.components,
+    /// 注册所有组件 可以考虑只加载当前舞台实例化组件 后续优化点
+    components: mods.getComponents(),
     
     mounted() {
         this.bind()
@@ -40,7 +41,6 @@ export default {
                 // console.log(this.page.mods)
             })
 
-
             $(this.$el).delegate('.lincoapp', 'click', function(){
                 vm.renderModConfig({
                     name: this.getAttribute('name'),
@@ -48,7 +48,6 @@ export default {
                 })
             })
         },
-
 
         renderModConfig({name, uuid}) {
             // 请求配置中心渲染当前组件配置
@@ -90,8 +89,8 @@ export default {
                     /// 查询组件name 作为组件识别id
                     const name = ui.draggable.attr('name')
 
-                    /// 从平台获得舞台数据
-                    const mod = mods.mods.find(mod => mod.name === name)
+                    /// from Mods-list
+                    const mod = mods.getByName(name)
 
                     /// 动态加载组件到中心舞台
                     this.items.push({
@@ -104,13 +103,10 @@ export default {
                     /// 查找当前组件的vm实例
                     this.$nextTick(() => {
                         const vm = this.$children.find(vm => uuid === vm.$attrs.uuid)
-                        /// 实例信息注入到舞台数据中
-                        window.stage.vms.map[uuid] = vm
-                        window.stage.vms.list.push({
-                            vm: vm,
-                            name: name,
-                            uuid: uuid,
-                        })
+                        const pod = Object.assign({}, mod, { vm, uuid })
+
+                        // 可视化组件数据注入到舞台组件列表
+                        stage.mods.push(new Mod(pod))
 
                         /// 为组件注入能力列表
                         this.regAbility(vm, mod.config)
@@ -118,21 +114,6 @@ export default {
                         /// 渲染组件配置
                         this.renderModConfig({name, uuid})
                     })
-                },
-                drops: (event, ui) => {
-                    const uuid = uid.v4()
-                    /// 查询组件名
-                    const name = ui.draggable.attr('name')
-                    /// 创建组件文档副本
-                    const target = ui.draggable.clone()
-                    /// 注入uuid
-                    target.attr('uuid', uuid)
-                    /// 注入标记类 后续需要删除
-                    target.addClass('lincoapp')
-                    /// 删除拖动附加的类
-                    target.removeClass('ui-draggable ui-draggable-handle')
-                    /// 添加副本到舞台
-                    $(event.target).append(target)
                 }
             })
             .sortable({
@@ -142,12 +123,10 @@ export default {
                     // mods uuid
                     let uuids = Array.from(items).map(item => item.getAttribute('uuid'))
 
+                    let stageMods = stage.mods.getMods(true)
 
-                    /// window.stage.vms.list 进行排序
-                    /// 始终保证与舞台上组件顺序相同
-                    window.stage.vms.list = uuids.map(uuid => {
-                        return window.stage.vms.list.find(mod => mod.uuid === uuid)
-                    })
+                    /// 当舞台组件被排序后 对stageMods进行排序 始终保证与舞台上组件顺序相同
+                    stageMods = uuids.map(uuid => stage.mods.getById(uuid))
                 }
             })
             .disableSelection()

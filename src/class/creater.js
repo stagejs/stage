@@ -1,3 +1,14 @@
+/**
+ * 
+ * @desc 
+ * @date 2018-06-09
+ * @author gavinning gavinning@qq.com
+ *
+ * @history
+ *    created at 2018-06-09 by gavinning
+ *
+ */
+
 import emmet from '@gavinning/emmet.js'
 
 export default class Creater {

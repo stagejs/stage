@@ -1,35 +1,32 @@
-import is from 'aimee-is'
-import types from './types'
-import Creater from '../common/creater'
+/**
+ * 
+ * @desc Editor
+ * @date 2018-06-11
+ * @author gavinning gavinning@qq.com
+ *
+ * @history
+ *    created at 2018-06-11 by gavinning
+ *
+ */
+
 import Config from 'vpm-config'
+import types from '../common/types'
+import create from '../loader/creater-loader'
 
-const create = new Creater()
-
-
-export default class ConfigParser {
-    constructor({vm, clone, config}) {
+export default class Editor {
+    constructor({ vm, config }) {
         this.vm = vm
+        this.name = vm.$attrs.name
         this.config = config
     }
 
-    parse() {
-        if (!this.config || this.config.length === 0) {
-            return
-        }
+    create() {
         return this.config.filter(conf => types[conf.type]).map(conf => {
-            return createEditor(this.vm, conf)
+            return this[`$${conf.type}`](this.vm, conf)
         })
     }
-}
 
-function createEditor(vm, config) {
-    if (editor[config.type]) {
-        return editor[config.type](vm, config)
-    }
-}
-
-const editor = {
-    text(vm, config) {
+    $text(vm, config) {
         /// FIXME
         // 这里是假设所有字段都存在的情况
         // 后续需要检查可选字段是否存在，做出相应处理
@@ -61,9 +58,9 @@ const editor = {
         target.on('input', e => data.set(uri, target.val()))
 
         return wrapper
-    },
+    }
 
-    button(vm, config) {
+    $button(vm, config) {
         const wrapper = create.wrapper()
         const desc = create.desc(config.desc)
         const target = create.emmet('button').text(config.title)
@@ -74,9 +71,9 @@ const editor = {
         target.on('click', e => config.submit(vm))
 
         return wrapper
-    },
+    }
 
-    group(vm, config) {
+    $group(vm, config) {
         const data = new Config(vm.$data)
         const items = data.get(config.uri)
         const wrapper = create.wrapper()

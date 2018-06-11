@@ -9,13 +9,13 @@
         img(src="../assets/bg2.png")
 </template>
 <script>
-import mods from '../common/mod-loader'
+import mods from '../loader/mods-loader'
 
 export default {
 
     data() {
         return {
-            mods: mods.mods.slice(0),
+            mods: mods.getAll().mods,
             tabs: [
                 {
                     name: '组件',
@@ -29,7 +29,7 @@ export default {
         }
     },
     
-    components: mods.components,
+    components: mods.getComponents(),
 
     mounted() {
         this.dragableMods()
