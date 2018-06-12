@@ -10,8 +10,8 @@
  */
 
 import Config from 'vpm-config'
-import types from '../common/types'
-import create from '../loader/creater-loader'
+import types from 'common/types'
+import create from 'loader/creater-loader'
 
 export default class Editor {
     constructor({ vm, config }) {

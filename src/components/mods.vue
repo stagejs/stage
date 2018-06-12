@@ -9,7 +9,7 @@
         img(src="../assets/bg2.png")
 </template>
 <script>
-import mods from '../loader/mods-loader'
+import mods from 'loader/mods-loader'
 
 export default {
 

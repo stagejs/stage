@@ -9,6 +9,6 @@
  *
  */
 
-import Stage from '../class/stage'
+import Stage from 'class/stage'
 
 export default new Stage()

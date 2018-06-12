@@ -29,6 +29,13 @@ module.exports = {
       '@': resolve('src'),
       'mods': resolve('src/components'),
       'list': resolve('src/list'),
+      'loader': resolve('src/loader'),
+      'class': resolve('src/class'),
+      'common': resolve('src/common'),
+      'config': resolve('src/config'),
+      'assets': resolve('src/assets'),
+      'pages': resolve('src/pages'),
+      'router': resolve('src/router'),
     }
   },
   module: {

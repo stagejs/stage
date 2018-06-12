@@ -15,7 +15,6 @@ import Mods from 'mods/mods'
 import Preview from 'mods/preview'
 import Configure from 'mods/configure'
 
-
 export default {
     data() {
         return {

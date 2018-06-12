@@ -9,9 +9,9 @@
  *
  */
 
-import Mod from '../class/mod'
-import Mods from '../class/mods'
-import base from '../config/mods.config'
+import Mod from 'class/mod'
+import Mods from 'class/mods'
+import base from 'config/mods.config'
 
 const list = base.map(rule => {
     const arr = rule.split(' ')

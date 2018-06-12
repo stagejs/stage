@@ -9,6 +9,6 @@
  *
  */
 
-import Configure from '../class/configure'
+import Configure from 'class/configure'
 
 export default new Configure

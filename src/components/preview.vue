@@ -12,10 +12,10 @@
 </template>
 <script>
 import uid from 'uuid'
-import bus from '../common/bus'
-import Mod from '../class/mod'
-import mods from '../loader/mods-loader'
-import stage from '../loader/stage-loader'
+import bus from 'common/bus'
+import Mod from 'class/mod'
+import mods from 'loader/mods-loader'
+import stage from 'loader/stage-loader'
 
 export default {
 

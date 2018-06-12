@@ -6,11 +6,11 @@
 
 </template>
 <script>
-import bus from '../common/bus'
+import bus from 'common/bus'
+import ConfigParser from 'class/config-parser'
+import Editor from 'class/editor'
+import stage from 'loader/stage-loader'
 import template from '../w/template'
-import ConfigParser from '../class/config-parser'
-import Editor from '../class/editor'
-import stage from '../loader/stage-loader'
 
 export default {
 

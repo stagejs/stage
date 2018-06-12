@@ -9,6 +9,6 @@
  *
  */
 
-import Creater from '../class/creater'
+import Creater from 'class/creater'
 
 export default new Creater
