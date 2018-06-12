@@ -1,3 +1,5 @@
+import stage from 'loader/stage-loader'
+
 function html(data) {
     return `
 <template lang="html">
@@ -53,12 +55,11 @@ function parse() {
 
     myMods.components = {}
     // => namse
-    myMods.names = mods.mods.map(mod => mod.name)
+    myMods.names = stage.mods.getNames()
     // => mods
-    myMods.mods = mods.mods.filter(item => {
-        return mods.mods.map(mod => mod.name).indexOf(item.name) >= 0
-    })
+    myMods.mods = stage.mods
     // => components
+    
     myMods.names.forEach(name => {
         myMods.components[name] = myMods.mods.find(mod => mod.name === name).vm
     })
@@ -87,7 +88,7 @@ function parse() {
         components: `{${myMods.names.toString()}}`,
         loadMods: (() => {
             return myMods.names.map(name => {
-                return `import ${name} from '${myMods.mods.find(mod => mod.name === name).url}'`
+                return `import ${name} from '${myMods.mods.find(mod => mod.name === name).uri}'`
             }).join('\n')
         })()
     }
