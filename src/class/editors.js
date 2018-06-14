@@ -64,8 +64,4 @@ export default class Editors extends List {
         }
         return this
     }
-
-    findIndex(callback) {
-        return this.$editors.findIndex(callback)
-    }
 }
