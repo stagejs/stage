@@ -16,6 +16,7 @@ import create from 'loader/creater-loader'
 export default class Editor {
     constructor({ vm, config }) {
         this.vm = vm
+        this.uuid = vm.$attrs.uuid
         this.name = vm.$attrs.name
         this.config = config
     }
@@ -68,7 +69,19 @@ export default class Editor {
         wrapper.append(target)
         wrapper.append(desc)
 
-        target.on('click', e => config.submit(vm))
+        target.click(e => {
+            config.submit(vm)
+            /// 请求渲染配置
+            vm.$nextTick(() => {
+                /// 此时vm.$parent是中心舞台vm实例
+                /// 虽然组件配置独立于可视化平台之外，但当组件被实例化到中心舞台之后
+                /// 就可以通过当前vm实例桥接到可视化平台请求组件配置渲染
+                vm.$parent.renderModConfig({
+                    name: vm.$attrs.name,
+                    uuid: vm.$attrs.uuid
+                })
+            })
+        })
 
         return wrapper
     }
@@ -133,6 +146,21 @@ export default class Editor {
         // 遍历可重复item的数组
         items.forEach((dataItem, index) => {
             const item = create.group()
+            
+            if (config.deleteable) {
+                const iconDelete = create.emmet('button{删除字段}')
+
+                item.append(iconDelete)
+
+                /// 删除子项
+                iconDelete.click(() => {
+                    items.splice(index, 1)
+                    vm.$parent.renderModConfig({
+                        name: vm.$attrs.name,
+                        uuid: vm.$attrs.uuid
+                    })
+                })
+            }
 
             // 对每一个item应用group配置
             config.group.forEach(conf => {
@@ -140,6 +168,7 @@ export default class Editor {
                 const title = create.cellTitle(conf.title)
                 const desc = create.cellDesc(conf.desc)
                 const target = create.emmet('input[type="text"]')
+
 
                 cell.append(title)
                 cell.append(target)

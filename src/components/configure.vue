@@ -8,8 +8,8 @@
 <script>
 import bus from 'common/bus'
 import ConfigParser from 'class/config-parser'
-import Editor from 'class/editor'
 import stage from 'loader/stage-loader'
+import configure from 'loader/configure-loader'
 import template from '../w/template'
 
 export default {
@@ -23,16 +23,14 @@ export default {
             /// 监听渲染事件请求
             bus.$on('configure.render', ({name, uuid}) => {
                 const mod = stage.mods.getById(uuid)
-                const parser = new ConfigParser(mod.config.editor)
-                const config = parser.parse()
-                const editor = new Editor({ vm: mod.vm, config })
+                const editor = configure.editors.get(mod)
                 $(this.$el).find('.editor').html(editor.create() || '')
             })
         },
 
         build() {
             bus.$emit('config.build')
-            this.createTemplate() 
+            this.createTemplate()
         },
 
         createTemplate() {

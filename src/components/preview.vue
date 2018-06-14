@@ -16,6 +16,8 @@ import bus from 'common/bus'
 import Mod from 'class/mod'
 import mods from 'loader/mods-loader'
 import stage from 'loader/stage-loader'
+import create from 'loader/creater-loader'
+import preview from 'config/preview'
 
 export default {
 
@@ -27,43 +29,74 @@ export default {
 
     /// 注册所有组件 可以考虑只加载当前舞台实例化组件 后续优化点
     components: mods.getComponents(),
+
+    events: {
+        '.lincoapp@click' (vm) {
+            vm.renderModConfig({
+                name: this.attr('name'),
+                uuid: this.attr('uuid')
+            })
+            this.addClass(preview.className.active)
+            this.siblings(preview.className._sign).removeClass(preview.className.active)
+        }
+    },
     
     mounted() {
-        this.bind()
         this.dropable()
     },
 
     methods: {
-        bind() {
-            const vm = this
-
-            bus.$on('config.build', () => {
-                // console.log(this.page.mods)
-            })
-
-            $(this.$el).delegate('.lincoapp', 'click', function(){
-                vm.renderModConfig({
-                    name: this.getAttribute('name'),
-                    uuid: this.getAttribute('uuid')
-                })
-            })
-        },
-
         renderModConfig({name, uuid}) {
             // 请求配置中心渲染当前组件配置
             bus.$emit('configure.render', {name, uuid})
         },
 
+        // 选中指定的组件
+        select(vm) {
+            $(vm.$el ? vm.$el : vm).click()
+        },
+
+        /// todo 此处待确定
         /// 为组件注入其申请的能力列表
         regAbility(vm, config) {
             /// todo 能力列表 应从外部引入 待优化
             const ability = {
                 sortable(node) {
-                    node.sortable()
+                    // node.sortable()
                 },
 
                 deleteable(node) {
-                    console.log('deleteable is not ready')
+                    return /// 待完善 改为在configure实现 实现方式改为面对数据操作
+                    const items = node.find('>')
+
+                    items.each((index, item) => {
+                        item = $(item).addClass('ap ui-deleteable-handle')
+
+                        const close = create.emmet('div.iclose')
+                        const pos = {left: item.width() - 16, top: 0}
+
+                        close.css({
+                            position: 'absolute',
+                            left: pos.left,
+                            top: pos.top,
+                            zIndex: 800,
+                            width: 16,
+                            height: 16,
+                            borderRadius: 16
+                        })
+
+                        close.click(() => {
+                            let index = items.index(item)
+                        })
+
+                        item.append(close.hide().attr('title', 'delete'))
+                    })
+
+                    items.hover(function() {
+                        $(this).find('.iclose').show()
+                    }, function() {
+                        $(this).find('.iclose').hide()
+                    })
                 }
             }
 
@@ -78,26 +111,26 @@ export default {
             })
         },
 
+        // 组件进入舞台时的各种操作
         dropable() {
-            /// 组件进入舞台时的各种操作
             $(this.$el).droppable({
                 accept: ".ui-draggable",
                 drop: (event, ui) => {
-                    /// 创建组件页面渲染副本UUID 作为操作副本的唯一id
+                    // 创建组件页面渲染副本UUID 作为操作副本的唯一id
                     const uuid = uid.v4()
 
-                    /// 查询组件name 作为组件识别id
+                    // 查询组件name 作为组件识别id
                     const name = ui.draggable.attr('name')
 
-                    /// from Mods-list
+                    // from Mods-list
                     const mod = mods.getByName(name)
 
-                    /// 动态加载组件到中心舞台
+                    // 动态加载组件到中心舞台
                     this.items.push({
-                        uuid: uuid,
-                        name: name,
+                        name,
+                        uuid,
                         /// 注入操作需要的类
-                        className: 'lincoapp'
+                        className: preview.className.sign
                     })
 
                     /// 查找当前组件的vm实例
@@ -111,8 +144,8 @@ export default {
                         /// 为组件注入能力列表
                         this.regAbility(vm, mod.config)
 
-                        /// 渲染组件配置
-                        this.renderModConfig({name, uuid})
+                        /// 选中组件 渲染组件配置
+                        this.select(vm)
                     })
                 }
             })
@@ -123,6 +156,7 @@ export default {
                     // mods uuid
                     let uuids = Array.from(items).map(item => item.getAttribute('uuid'))
 
+                    // 获取中心舞台组件列表
                     let stageMods = stage.mods.getMods(true)
 
                     /// 当舞台组件被排序后 对stageMods进行排序 始终保证与舞台上组件顺序相同
@@ -132,9 +166,9 @@ export default {
             .disableSelection()
         },
 
-        choose(type) {
-            bus.$emit('mods.choose', type)
-        }
+        // choose(type) {
+        //     bus.$emit('mods.choose', type)
+        // }
     }
 }
 </script>

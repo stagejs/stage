@@ -42,6 +42,18 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+
+    //////// user add
+
+    // 不检查host 允许使用代理
+    disableHostCheck: true,
+
+    // 自定义路由
+    before(app) {
+      app.get('/api/test', (req, res) => {
+        res.send({a:1})
+      })
     }
   },
   plugins: [

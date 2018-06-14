@@ -1,8 +1,8 @@
 import types from '../../common/types'
 
 const form = {
-
-    ability: ['sortable', 'deleteable'],
+    // todo 能力注入待重写
+    //ability: ['sortable', 'deleteable'],
 
     editor: [
         {
@@ -22,17 +22,6 @@ const form = {
                     value:  '',
                     placeholder: 'placeholder'
                 })
-
-                /// 请求渲染配置
-                vm.$nextTick(() => {
-                    /// 此时vm.$parent是中心舞台vm实例
-                    /// 虽然组件配置独立于可视化平台之外，但当组件被实例化到中心舞台之后
-                    /// 就可以通过当前vm实例桥接到可视化平台请求组件配置渲染
-                    vm.$parent.renderModConfig({
-                        name: vm.$attrs.name,
-                        uuid: vm.$attrs.uuid
-                    })
-                })
             }
         },
         {
@@ -45,6 +34,9 @@ const form = {
             desc: '表单修改测试',
 
             uri: 'items',
+
+            /// 是否允许删除
+            deleteable: true,
 
             /// 这里group内的所有配置 是对一个组件可重复item单位的配置描述
             /// 当前例子是一个表单，表单内会有很多字段，每一个字段都应该是一个可重复的item

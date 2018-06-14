@@ -3,9 +3,13 @@
 import Vue from 'vue'
 import Home from 'pages/home'
 import router from 'router'
+import bindMixin from 'common/bind'
 import 'minireset.css'
+import './assets/base.stylus'
 
 Vue.config.productionTip = false
+
+Vue.mixin(bindMixin)
 
 /* eslint-disable no-new */
 new Vue({

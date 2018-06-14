@@ -1,0 +1,30 @@
+.blink
+    animation blink 600ms 1 ease-out
+
+@keyframes blink
+    0%
+        opacity 1
+    50%
+        opacity 0.8
+        background-color rgba(249,161,29,0.5)
+    100%
+        opacity 1
+    
+
+.lincoappActive
+    outline 2px solid #004eff4a !important
+
+.icon-delete
+    width 20px
+    height 20px
+    opacity 0.5
+    background url(./icon-delete.png) no-repeat
+    background-size 100% auto
+    cursor pointer
+
+    &:hover
+        opacity 1
+
+
+.ap
+    position relative
