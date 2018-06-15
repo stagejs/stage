@@ -60,7 +60,7 @@ export default class Editors extends List {
         const index = this.findIndex(item => item === editor)
         if (index >= 0) {
             this.$editors.splice(index, 1)
-            delete this.$map[editor.name]
+            delete this.$map[editor.uuid]
         }
         return this
     }
