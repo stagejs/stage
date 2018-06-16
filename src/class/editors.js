@@ -18,7 +18,11 @@ export default class Editors extends List {
     constructor() {
         super()
         this.$editors = this.$arr
+<<<<<<< HEAD
+        this.$map = {} /// { editor.name: editor }
+=======
         this.$map = {} /// { editor.uuid: editor }
+>>>>>>> a3981975878337938712c000919e776fd3cacab5
     }
 
     /**
