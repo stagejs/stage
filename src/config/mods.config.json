@@ -1,5 +1,38 @@
 [
-    "lincoapp-form list/form",
-    "lincoapp-header list/header",
-    "lincoapp-footer list/footer"
+	{
+		"$id": "footer",
+		"name": "LincoappFooter",
+		"main": "src/footer.vue",
+		"version": "1.0.0",
+		"sid": "LincoappFooter",
+		"uri": "footer/last/src/footer.vue",
+		"config": "footer/last/config.js",
+		"files": [
+			"src/footer.vue"
+		]
+	},
+	{
+		"$id": "form",
+		"name": "LincoappForm",
+		"main": "src/form.vue",
+		"version": "1.0.0",
+		"sid": "LincoappForm",
+		"uri": "form/last/src/form.vue",
+		"config": "form/last/config.js",
+		"files": [
+			"src/form.vue"
+		]
+	},
+	{
+		"$id": "header",
+		"name": "LincoappHeader",
+		"main": "src/header.vue",
+		"version": "1.0.0",
+		"sid": "LincoappHeader",
+		"uri": "header/last/src/header.vue",
+		"config": "header/last/config.js",
+		"files": [
+			"src/header.vue"
+		]
+	}
 ]

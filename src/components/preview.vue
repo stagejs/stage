@@ -117,7 +117,7 @@ export default {
                 accept: ".ui-draggable",
                 drop: (event, ui) => {
                     // 创建组件页面渲染副本UUID 作为操作副本的唯一id
-                    const uuid = uid.v4()
+                    const uuid =  'stage-' + uid.v4()
 
                     // 查询组件name 作为组件识别id
                     const name = ui.draggable.attr('name')

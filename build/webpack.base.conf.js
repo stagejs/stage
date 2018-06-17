@@ -23,6 +23,8 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
+    // 在当前位置解析软连接，不解析软连接到原有位置
+    symlinks: false,
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',

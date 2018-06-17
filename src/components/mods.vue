@@ -28,6 +28,10 @@ export default {
             ]
         }
     },
+
+    created() {
+
+    },
     
     components: mods.getComponents(),
 

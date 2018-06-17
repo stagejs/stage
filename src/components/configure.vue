@@ -6,11 +6,13 @@
 
 </template>
 <script>
+import uid from 'uuid'
 import bus from 'common/bus'
 import ConfigParser from 'class/config-parser'
 import stage from 'loader/stage-loader'
 import configure from 'loader/configure-loader'
-import template from '../w/template'
+import appTemplate from '../templates/app.js'
+import mainTemplate from '../templates/main.js'
 
 export default {
 
@@ -28,18 +30,69 @@ export default {
             })
         },
 
+        // 构建
         build() {
-            bus.$emit('config.build')
-            this.createTemplate()
+            bus.$emit('configure.build')
+            this.publish()
+            console.log(this.createApp())
+            console.log(this.createMain())
         },
 
-        createTemplate() {
-            const tmp = template()
-            console.log(tmp)
+        // create app.vue
+        createApp() {
+            return appTemplate()
         },
 
-        render() {
-  
+        // create main.js
+        createMain() {
+            return mainTemplate()
+        },
+
+        // 发布服务器，请求构建
+        publish() {
+            const data = this.parse()
+            $.post('http://stage.com/api/v1/stage/project', data, (...args) => {
+                console.log(args)
+            })
+        },
+
+        // 格式化服务器所需数据格式
+        parse() {
+            return {
+                project: 'demo',
+                version: '1.0.0',
+                id: 0,
+                hash: uid.v4(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                
+                stage: {
+                    version: '1.0.0'
+                },
+
+                mods: stage.mods.getMods().map(mod => {
+                    return {
+                        name: mod.$id,
+                        main: mod.main,
+                        uuid: mod.uuid,
+                        version: mod.version,
+                        sid: mod.sid,
+                        files: mod.files.slice(0),
+                        stage: {} // 组件可视化开发跟踪
+                    }
+                }),
+
+                files: [
+                    {
+                        url: 'app.vue',
+                        content: encodeURIComponent(this.createApp())
+                    },
+                    {
+                        url: 'main.js',
+                        content: encodeURIComponent(this.createMain())
+                    }
+                ]
+            }
         }
     }
 }

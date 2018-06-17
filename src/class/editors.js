@@ -1,6 +1,6 @@
 /**
  * 
- * @desc 编辑器父类
+ * @desc 编辑器管理
  * @date 2018-06-11
  * @author gavinning gavinning@qq.com
  *
@@ -18,11 +18,7 @@ export default class Editors extends List {
     constructor() {
         super()
         this.$editors = this.$arr
-<<<<<<< HEAD
-        this.$map = {} /// { editor.name: editor }
-=======
         this.$map = {} /// { editor.uuid: editor }
->>>>>>> a3981975878337938712c000919e776fd3cacab5
     }
 
     /**

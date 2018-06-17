@@ -14,7 +14,6 @@ export default {
     className: {
         sign: 'lincoapp',
         _sign: '.lincoapp',
-
         active: 'lincoappActive',
         _active: '.lincoappActive'
     }

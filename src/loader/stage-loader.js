@@ -11,4 +11,4 @@
 
 import Stage from 'class/stage'
 
-export default new Stage()
+export default new Stage

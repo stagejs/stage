@@ -1,6 +1,6 @@
 /**
  * 
- * @desc Editor
+ * @desc Editor 配置中心编辑器
  * @date 2018-06-11
  * @author gavinning gavinning@qq.com
  *

@@ -1,6 +1,6 @@
 /**
  * 
- * @desc 
+ * @desc DOM创建
  * @date 2018-06-09
  * @author gavinning gavinning@qq.com
  *

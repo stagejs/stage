@@ -10,21 +10,17 @@
  */
 
 export default class Mod {
-    /**
-     * 
-     * @param {String} name* 组件名，组件id
-     * @param {String} uri* 组件资源id
-     * @param {Object} option* vue组件的option
-     * @param {Object} config* 组件可视化配置 为空则不提供任何可视化配置
-     * @param {String} uuid 组件实例唯一id 仅中心舞台需要
-     * @param {Vue} vm 组件Vue实例 仅中心舞台需要
-     */
-    constructor({vm, name, uuid, uri, option, config}) {
-        this.vm = vm
-        this.uri = uri
-        this.name = name
-        this.uuid = uuid
-        this.option = option
-        this.config = config
+    constructor({$id, name, main, version, sid, uri, files, vm, uuid, option, config}) {
+        this.$id = $id              // 组件真名 组件唯一id 非数据库id [For Stage]
+        this.name = name            // 组件名，组件id，[For Vue]
+        this.main = main            // 组件入口文件
+        this.version = version      // 组件版本号
+        this.sid = sid              // 组件sid 加载模块时的key 防止与HTML tag重复
+        this.uri = uri              // 组件资源路径 用于 webpack require
+        this.files = files          // 组件内所有资源uri
+        this.vm = vm                // 组件在可视化平台vm实例
+        this.uuid = uuid            // 组件在可视化平台实例id
+        this.option = option        // 组件对象 = require(uri)
+        this.config = config        // 组件可视化配置
     }
 }
