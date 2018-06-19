@@ -34,8 +34,8 @@ export default {
         build() {
             bus.$emit('configure.build')
             this.publish()
-            console.log(this.createApp())
-            console.log(this.createMain())
+            // console.log(this.createApp())
+            // console.log(this.createMain())
         },
 
         // create app.vue
@@ -50,9 +50,15 @@ export default {
 
         // 发布服务器，请求构建
         publish() {
+            console.group('构建：')
+            console.log('发起构建请求')
+            console.log('等待构建响应...')
             const data = this.parse()
-            $.post('http://stage.com/api/v1/stage/project', data, (...args) => {
-                console.log(args)
+            // console.log(data)
+            $.post('http://stage.com/api/v1/stage/project', data, (data, message, xhr) => {
+                console.log('code:', data.code)
+                console.log('message:', data.message)
+                console.groupEnd()
             })
         },
 
@@ -66,10 +72,18 @@ export default {
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
                 
+                // 可视化平台相关信息
                 stage: {
                     version: '1.0.0'
                 },
 
+                // 需要的编辑器信息
+                compiler: {
+                    version: '1.0.0',
+                    config: 'default'
+                },
+
+                // 可视化平台需要构建的组件信息
                 mods: stage.mods.getMods().map(mod => {
                     return {
                         name: mod.$id,
@@ -82,6 +96,7 @@ export default {
                     }
                 }),
 
+                // 可视化平台创建的文件
                 files: [
                     {
                         url: 'app.vue',

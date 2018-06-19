@@ -13,6 +13,7 @@ export default function createMainTemplate() {
     return `
         import Vue from 'vue'
         import App from './app.vue'
+        // import './assets/css/reset.css'
 
         Vue.config.productionTip = false
 

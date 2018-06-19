@@ -159,8 +159,14 @@ export default {
                     // 获取中心舞台组件列表
                     let stageMods = stage.mods.getMods(true)
 
-                    /// 当舞台组件被排序后 对stageMods进行排序 始终保证与舞台上组件顺序相同
-                    stageMods = uuids.map(uuid => stage.mods.getById(uuid))
+                    // 当舞台上组件实例被排序后，根据舞台组件顺序对组件列表进行排序
+                    let clone = uuids.map(uuid => stage.mods.getById(uuid))
+
+                    // 把排序结果同步到中心舞台组件列表
+                    // 这里的同步指的是同步到数据层面 也就是根据UI的排序重新排序数据
+                    clone.forEach((mod, index) => {
+                        stageMods[index] = mod
+                    })
                 }
             })
             .disableSelection()
